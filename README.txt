@@ -1,6 +1,8 @@
 oscodepoint.py
 ==============
 
+_Fork: This fork significantly speeds up transformation_
+
 An interface to Ordnance Survey's CodePoint-Open. CodePoint-Open is a free
 dataset that maps UK postcodes to coordinates.
 
