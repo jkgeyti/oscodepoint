@@ -67,6 +67,7 @@ import fnmatch
 import glob
 import os.path
 import pyproj
+from pyproj.transformer import Transformer
 import re
 import xlrd
 import zipfile
@@ -137,6 +138,9 @@ class BaseCodePoint(object):
             if not re.search(r'^[A-Za-z]{1,2}$', area):
                 raise ValueError('Incorrect format for area: '
                                  'expected 1 or 2 letters, got "%s"' % (area,))
+                
+            if to_proj is not None:
+                transformer = Transformer.from_proj(proj_from=from_proj, proj_to=to_proj)
 
             for row in self._get_name_rows(self.data_name_format % area.lower()):
                 entry = OrderedDict(list(zip(self.long_headers, row)))
@@ -144,7 +148,7 @@ class BaseCodePoint(object):
 
                 if to_proj is not None:
                     eastings, northings = float(entry['Eastings']), float(entry['Northings'])
-                    lng, lat = pyproj.transform(from_proj, to_proj, eastings, northings)
+                    lng, lat = transformer.transform(eastings, northings)
                     entry['Longitude'], entry['Latitude'] = lng, lat
 
                 yield entry
